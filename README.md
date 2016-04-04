@@ -2,6 +2,7 @@ composer.phar require mickeyur/yii2-commentator:dev-master
 
 yii migrate/up --migrationPath=@vendor/mickeyur/yii2-commentator/migrations
 
+
    'modules' => [
       ...
       
