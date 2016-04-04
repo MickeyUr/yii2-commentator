@@ -41,6 +41,12 @@ $this->registerJs($script, yii\web\View::POS_END);
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'rowOptions' => function($model, $key, $index, $grid) {
+            return [
+                'class' => $index%2? "even{$model->getRowCssClass()}" : "odd{$model->getRowCssClass()}"
+            ];
+        }
+        ,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
@@ -204,7 +210,7 @@ $this->registerJs($script, yii\web\View::POS_END);
     |
     <?php echo Html::submitButton('Удалить', array('ajaxDelete'), array(
         'beforeSend' => 'function(){
-            return confirm("' . Yii::t('mickey\commentator\Module.main', 'Are you sure you want to delete selected items?') . '");
+            return confirm("' . Yii::t('mickeyur\commentator\Module.main', 'Are you sure you want to delete selected items?') . '");
         }',
         'success' => 'reloadGrid'
     )); ?>

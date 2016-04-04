@@ -168,8 +168,7 @@ class Module extends BaseModule
      */
     public function isSuperuser()
     {
-//        return $this->evaluateExpression($this->isSuperuser);
-        return $this->isSuperuser;
+        return eval("return {$this->isSuperuser};");
     }
 
     /**

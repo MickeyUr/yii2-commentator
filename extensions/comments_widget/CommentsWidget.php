@@ -104,7 +104,7 @@ class CommentsWidget extends Widget
     public function publishAssets()
     {
         $url = Yii::$app->getAssetManager()->publish(
-            Yii::getAlias('@vendor/mickey/yii2-commentator/extensions/comments_widget/assets'));
+            Yii::getAlias('@vendor/mickeyur/yii2-commentator/extensions/comments_widget/assets'));
 
         Yii::$app->view->registerCssFile($url[1] . '/css/styles.css');
         Yii::$app->view->registerJsFile($url[1] . '/js/script.js', ['depends' => 'yii\web\JqueryAsset']);

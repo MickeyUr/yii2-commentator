@@ -83,8 +83,8 @@ class CommentSettings extends \yii\db\ActiveRecord
     public static function booleanArray()
     {
         return array(
-			self::YES => \Yii::t('mickey\commentator\Module.main', 'yes'),
-			self::NO => \Yii::t('mickey\commentator\Module.main', 'no'),
+			self::YES => \Yii::t('mickeyur\commentator\Module.main', 'yes'),
+			self::NO => \Yii::t('mickeyur\commentator\Module.main', 'no'),
         );
     }
 

@@ -244,7 +244,7 @@ class HandlerController extends Controller
 		    return;
 	    }
 
-        $message = $this->renderPartial('email.notifyAdmin', ['newComment' => $newComment], true);
+        $message = $this->renderPartial('../../extensions/comments_widget/views/email/notifyAdmin', ['newComment' => $newComment], true);
 
         $this->module->sendMail($this->module->adminEmail, 'Новый комментарий на сайте "' . \Yii::$app->name . '"', $message);
     }
@@ -262,7 +262,7 @@ class HandlerController extends Controller
             if ($newComment->getEmail() === $subscriber->getEmail())
                 continue;
 
-            $message = $this->renderPartial('email.notifyUser', [
+            $message = $this->renderPartial('../../extensions/comments_widget/views/email/notifyUser', [
                 'newComment' => $newComment,
                 'userName' => $subscriber->getAuthor(),
                 'userEmail' => $subscriber->getEmail(),
