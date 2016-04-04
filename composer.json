@@ -1,9 +1,9 @@
 {
-    "name": "mickey/yii2-commentator",
+    "name": "mickeyur/yii2-commentator",
     "description": "Yii-2 comments module",
     "authors": [
         {
-            "name": "mickey",
+            "name": "mickeyur",
             "email": "mickey.ur@gmail.com"
         }
     ],
