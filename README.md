@@ -2,12 +2,9 @@ composer.phar require mickeyur/yii2-commentator:dev-master
 
 yii migrate/up --migrationPath=@vendor/mickeyur/yii2-commentator/migrations
 
-кекек
-
-	кекеке
-
    'modules' => [
       ...
+      
         'comments' => [
             'class' => 'mickey\commentator\Module',
             'userModelClass' => 'common\models\User',
@@ -16,6 +13,7 @@ yii migrate/up --migrationPath=@vendor/mickeyur/yii2-commentator/migrations
             'usernameField' => 'username',
         ],
       ...
+      
     ],
 
 Yii-commentator
