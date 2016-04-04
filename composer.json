@@ -1,0 +1,16 @@
+{
+    "name": "mickey/yii2-commentator",
+    "description": "Yii-2 comments module",
+    "authors": [
+        {
+            "name": "mickey",
+            "email": "mickey.ur@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "mickey\\commentator\\": ""
+        }
+    }
+}
