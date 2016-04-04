@@ -1,6 +1,6 @@
 composer.phar require mickeyur/yii2-commentator:dev-master
 
-yii migrate/up --migrationPath=@vendor/mickey/yii2-commentator/migrations
+yii migrate/up --migrationPath=@vendor/mickeyur/yii2-commentator/migrations
 
 Yii-commentator
 ===============
