@@ -2,6 +2,18 @@ composer.phar require mickeyur/yii2-commentator:dev-master
 
 yii migrate/up --migrationPath=@vendor/mickeyur/yii2-commentator/migrations
 
+   'modules' => [
+      ...
+        'comments' => [
+            'class' => 'mickey\commentator\Module',
+            'userModelClass' => 'common\models\User',
+            'isSuperuser' => 'Yii::$app->user->identity->isAdmin',
+            'userEmailField' => 'email',
+            'usernameField' => 'username',
+        ],
+      ...
+    ],
+
 Yii-commentator
 ===============
 
