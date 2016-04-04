@@ -9,7 +9,7 @@ yii migrate/up --migrationPath=@vendor/mickeyur/yii2-commentator/migrations
    'modules' => [
       ...
         'comments' => [
-       
+       'comments'=>[
             'class' => 'mickey\commentator\Module',
             'userModelClass' => 'common\models\User',
             'isSuperuser' => 'Yii::$app->user->identity->isAdmin',
