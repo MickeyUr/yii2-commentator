@@ -1,6 +1,13 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 ?>
+
+<?php echo $commentPage = Html::a(
+    $newComment->loadPageTitle(),
+    $newComment->getAbsolutePageUrl(),
+    array('target'=>'_blank')
+) ; ?>
 
 Уважаемый <?php echo $userName; ?>!<br>
 Вы получили это письмо потому, что подписаны на уведомления о новых комментариях на странице

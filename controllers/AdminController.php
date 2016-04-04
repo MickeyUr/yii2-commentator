@@ -7,6 +7,7 @@ use mickey\commentator\models\query\CommentQuery;
 use mickey\commentator\models\search\CommentSearch;
 use yii\web\Controller;
 use Yii;
+use yii\base\View;
 use yii\widgets\ActiveForm;
 use mickey\commentator\CommentatorAsset;
 use yii\web\NotFoundHttpException;
@@ -19,12 +20,12 @@ class AdminController extends Controller
     public function init()
     {
         parent::init();
-
-//        \Yii::app()->clientScript->registerCssFile(
-//            \Yii::app()->assetManager->publish(
-//                \Yii::getPathOfAlias('comments.assets.css') . '/styles.css', false, -1, true
-//            )
-//        );
+//TODO не нравится
+        \Yii::$app->view->registerCssFile(
+            \Yii::$app->assetManager->publish(
+                \Yii::getAlias('@vendor/mickeyur/yii2-commentator/assets/css/styles.css')
+        )[1]
+		);
     }
 
 	/**
@@ -139,7 +140,7 @@ class AdminController extends Controller
 		{
 			$model->attributes = $_POST['CommentSettings'];
 			if ( $model->save() )
-				\Yii::$app->session->setFlash('settings_saved', \Yii::t('mickey\commentator\Module.main', 'Settings saved successfully'));
+				\Yii::$app->session->setFlash('settings_saved', \Yii::t('mickeyur\commentator\Module.main', 'Settings saved successfully'));
 		}
 
 		return $this->render('settings', ['model'=>$model]);

@@ -19,7 +19,7 @@ class CommentatorAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'site.css',
+        'styles.css',
     ];
     public $js = [
 

@@ -72,6 +72,10 @@ class CommentSearch extends Comment
             ->andFilterWhere(['like', 'content', $this->content])
             ->andFilterWhere(['like', 'ip', $this->ip]);
 
+        $query->orderBy([
+            'created' => SORT_DESC,
+        ]);
+
         return $dataProvider;
     }
 }

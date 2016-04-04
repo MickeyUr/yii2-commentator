@@ -197,26 +197,29 @@ class Comment extends \yii\db\ActiveRecord
      */
     public function afterSave($insert, $changedAttributes)
     {
-        parent::afterSave($insert, $changedAttributes);
-
-        if ( !$this->isNewRecord )
-            return true;
-
+//        Yii::$app->end;
+//        parent::afterSave($insert, $changedAttributes);
+//
+//        if ( !$this->isNewRecord )
+//            return true;
+//
         if (!$userModelClass = \Yii::$app->getModule('comments')->userModelClass)
             return true;
 
         $userModel = new $userModelClass();
         $userPK = $userModel->tableSchema->primaryKey;
         $userID = \Yii::$app->getModule('comments')->getUserID();
-        $criteria = new \CDbCriteria(); //TODO разобраться что за херня
+
+//        $criteria = new \CDbCriteria(); //TODO разобраться что за херня
 
         if (!empty($userID) )
-            $criteria->addNotInCondition($userPK, array($userID));
+            $query = $userModel::find(['not in ','id',array($userID)]);
+        else $query = $userModel::find();
 
-        foreach ($userModel->findAll($criteria) as $user)
+        foreach ($query->all() as $user)
         {
             $newComments = new NewComments();
-            $newComments->user_id = $user->$userPK;
+            $newComments->user_id = $user->$userPK[0];
             $newComments->comment_id = $this->id;
 
             if ( !$newComments->save() )
@@ -412,11 +415,11 @@ class Comment extends \yii\db\ActiveRecord
         switch ($this->status)
         {
             case self::STATUS_PENDING :
-                return $translate ? \Yii::t('mickey\commentator\Module.main', 'pending') : 'pending';
+                return $translate ? \Yii::t('mickeyur\commentator\Module.main', 'pending') : 'pending';
             case self::STATUS_APPROVED :
-                return $translate ? \Yii::t('mickey\commentator\Module.main', 'approved') : 'approved';
+                return $translate ? \Yii::t('mickeyur\commentator\Module.main', 'approved') : 'approved';
             case self::STATUS_REJECTED :
-                return $translate ? \Yii::t('mickey\commentator\Module.main', 'rejected') : 'rejected';
+                return $translate ? \Yii::t('mickeyur\commentator\Module.main', 'rejected') : 'rejected';
         }
     }
 
@@ -426,9 +429,9 @@ class Comment extends \yii\db\ActiveRecord
     public static function getStatusArray()
     {
         return array(
-            self::STATUS_PENDING => \Yii::t('mickey\commentator\Module.main', 'pending'),
-            self::STATUS_APPROVED => \Yii::t('mickey\commentator\Module.main', 'approved'),
-            self::STATUS_REJECTED => \Yii::t('mickey\commentator\Module.main', 'rejected'),
+            self::STATUS_PENDING => \Yii::t('mickeyur\commentator\Module.main', 'pending'),
+            self::STATUS_APPROVED => \Yii::t('mickeyur\commentator\Module.main', 'approved'),
+            self::STATUS_REJECTED => \Yii::t('mickeyur\commentator\Module.main', 'rejected'),
         );
     }
 
@@ -438,8 +441,8 @@ class Comment extends \yii\db\ActiveRecord
     public static function getNotifyStatusArray()
     {
         return array(
-            self::NOTIFY => \Yii::t('mickey\commentator\Module.main', 'yes'),
-            self::NOT_NOTIFY => \Yii::t('mickey\commentator\Module.main', 'no'),
+            self::NOTIFY => \Yii::t('mickeyur\commentator\Module.main', 'yes'),
+            self::NOT_NOTIFY => \Yii::t('mickeyur\commentator\Module.main', 'no'),
         );
     }
 
@@ -475,7 +478,7 @@ class Comment extends \yii\db\ActiveRecord
      */
     public function getNotifyStatus()
     {
-        return $this->notify ? \Yii::t('mickey\commentator\Module.main', 'yes') : \Yii::t('mickey\commentator\Module.main', 'no');
+        return $this->notify ? \Yii::t('mickeyur\commentator\Module.main', 'yes') : \Yii::t('mickeyur\commentator\Module.main', 'no');
     }
 
     /**
