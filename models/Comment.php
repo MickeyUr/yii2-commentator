@@ -200,8 +200,8 @@ class Comment extends \yii\db\ActiveRecord
 //        Yii::$app->end;
 //        parent::afterSave($insert, $changedAttributes);
 //
-//        if ( !$this->isNewRecord )
-//            return true;
+        if ( !$insert )
+            return true;
 //
         if (!$userModelClass = \Yii::$app->getModule('comments')->userModelClass)
             return true;
