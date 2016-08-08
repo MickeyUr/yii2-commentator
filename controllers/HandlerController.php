@@ -7,6 +7,7 @@ use yii\widgets\ActiveForm;
 use mickey\commentator\models\Comment as Comment;
 use mickey\commentator\helpers\CHelper as CHelper;
 use mickey\commentator\extensions\comments_widget\CommentsWidget as CommentsWidget;
+use yii\web\Response;
 
 class HandlerController extends Controller
 {
@@ -29,21 +30,25 @@ class HandlerController extends Controller
         $model = new Comment(['scenario' => 'guest']);
         if ( $user = \Yii::$app->getModule('comments')->loadUser() )
         {
+//            echo 0;
             $model->scenario='authorized';
             $model->user_id = $user->{$user->tableSchema->primaryKey[0]};
         }
-
+//echo 1;
         $this->performAjaxValidation($model);
 
         if ( !isset($_POST['Comment']) )
-            return false;
+        return false;
 
         $model->attributes = $_POST['Comment'];
         $model->ip = CHelper::getRealIP();
+//        dump($model->ip);
         $model->setStatus();
 
         if ( !$model->save() )
-            return false;
+//            return false;
+            return($model->getErrors());
+//        echo 1;
 
         \Yii::$app->session->set("commentHash_{$model->id}",$model->getHash());
 
@@ -56,7 +61,8 @@ class HandlerController extends Controller
 
         $this->sendUserNotifies($model);
 
-        return json_encode(array(
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return (array(
             'id' => $model->id,
             'premoderate' => \Yii::$app->getModule('comments')->getPremoderateStatus(),
             'tree' => $widget->getTree(),
@@ -168,15 +174,19 @@ class HandlerController extends Controller
      */
     public function actionLikes()
     {
+//        echo 1;
+//        exit();
         $model = Comment::find()->where(['id'=>$_POST['id']])->one();
+//        dump($model->likes);
         $model->setLike($_POST['like']);
+
 
         if ( !$model->canLiked() )
             return;
-
+//        dump($model->likes);
         if ( $model->save() )
         {
-            $model->setLikesToSession();
+//            $model->setLikesToSession();
 
             return json_encode(array(
                 'likes' => $model->getLikes()
@@ -212,9 +222,10 @@ class HandlerController extends Controller
      */
     protected function performAjaxValidation($model)
     {
-        if (isset($_POST['ajax']))
-        {
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
+//            return json_encode(ActiveForm::validate($model));
         }
     }
 

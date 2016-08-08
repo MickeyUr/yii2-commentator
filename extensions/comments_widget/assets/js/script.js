@@ -140,6 +140,7 @@ $(document).ready( function(){
      */
     function ajaxCreate(form)
     {
+        console.log('1');
         $.ajax({
             "url": commentsCreateUrl,
             "type": "post",
@@ -147,7 +148,10 @@ $(document).ready( function(){
             "data": form.serialize(),
             "success": function(data) {
                 // Сбрасываем форму
-                form[0].reset();
+                // form[0].reset();
+                $('#comment-content').val('');
+                $( "#comment-content" ).focus();
+                // $(this).trigger('reset');
                 // Перерисовываем дерево
                 $('[data-role="tree"]').html(data.tree);
 
@@ -164,6 +168,21 @@ $(document).ready( function(){
                 animateComment(data.id, colorSuccess);
                 // Обновляем счётчик комментариев
                 $('[data-role="count"]').html(data.count);
+                // console.log(data);
+                $('#comment-form').yiiActiveForm('updateMessages', {
+                    'commentform-content': ['Really?'],
+                    'commentform-author': ['Это поле должно быть заполнено?'],
+                    // 'contactform-email': ['I don\'t like it!']
+                }, true);
+                $.each(data, function(key, value) {
+
+                    console.log(key);
+                    console.log(value);
+                    var div = "#"+key+"_em_";
+                    console.log(div);
+                    $(div).text(value);
+                    $(div).show();
+                });
             },
             "beforeSend": function() {
                 $(".comments button").attr("disabled", true);
@@ -287,7 +306,7 @@ $(document).ready( function(){
      */
     function scrollToElem(elem, speed) {
         $("html, body").animate({
-            scrollTop: elem.offset().top
+            // scrollTop: elem.offset().top
         }, speed);
     }
 });

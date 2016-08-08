@@ -52,7 +52,9 @@ class CommentQuery extends \yii\db\ActiveQuery
     public function page($url='')
     {
         if ( empty($url) )
-            $url = \Yii::$app->getRequest()->getUrl();//   Yii::$app->request->requestUri;
+            $url = \Yii::$app->getRequest()->getBaseUrl().'/'.\Yii::$app->getRequest()->getPathInfo();//   Yii::$app->request->requestUri;
+//dump($url);
+//        dump(\Yii::$app->getRequest()->getUrl());
 
         $this->andWhere(['url' => $url]);
         $this->orderBy('created DESC'); // добавил Desc

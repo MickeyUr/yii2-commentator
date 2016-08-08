@@ -42,7 +42,6 @@ class CommentsWidget extends Widget
         $this->models = !empty($this->models)
             ? $this->models
             : Comment::find()->page()->approved()->all();
-
         $this->publishAssets();
         $this->buildCommentsArray();
     }

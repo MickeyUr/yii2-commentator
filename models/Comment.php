@@ -185,7 +185,9 @@ class Comment extends \yii\db\ActiveRecord
             $this->content = trim( strip_tags($this->content) );
             $this->author = trim( strip_tags($this->author) );
             $this->url = strip_tags($this->url);
-
+//dump( Yii::$app->controller->id);
+//            dump(Yii::$app->controller->action->id);
+//            exit();
             return true;
         }
         return false;
@@ -210,20 +212,21 @@ class Comment extends \yii\db\ActiveRecord
         $userPK = $userModel->tableSchema->primaryKey;
         $userID = \Yii::$app->getModule('comments')->getUserID();
 
-//        $criteria = new \CDbCriteria(); //TODO разобраться что за херня
-
         if (!empty($userID) )
             $query = $userModel::find(['not in ','id',array($userID)]);
         else $query = $userModel::find();
 
         foreach ($query->all() as $user)
         {
-            $newComments = new NewComments();
-            $newComments->user_id = $user->$userPK[0];
-            $newComments->comment_id = $this->id;
+            if (!NewComments::find()->where( [ 'user_id' => $user->$userPK[0], 'comment_id'=>$this->id] )->exists()){
+                $newComments = new NewComments();
+                $newComments->user_id = $user->$userPK[0];
+                $newComments->comment_id = $this->id;
 
-            if ( !$newComments->save() )
-                return false;
+                if ( !$newComments->save() )
+                    return false;
+            }
+
         }
 
         return true;
@@ -452,7 +455,8 @@ class Comment extends \yii\db\ActiveRecord
     public function getAbsolutePageUrl()
     {
 //        return \Yii::app()->getBaseUrl(true) . $this->url;
-        return \Yii::$app->homeUrl . $this->url;
+//        return \Yii::$app->homeUrl . $this->url;
+        return $this->url;
     }
 
     /**
@@ -538,7 +542,8 @@ class Comment extends \yii\db\ActiveRecord
         if ( !empty($pageTitles[$this->url]) )
             return $pageTitles[$this->url];
 
-        $absoluteUrl = \Yii::$app->homeUrl . $this->url;
+//        $absoluteUrl = \Yii::$app->homeUrl . $this->url;
+        $absoluteUrl = $this->url;
 //        $page = file_get_contents($absoluteUrl);
         $page='';
         preg_match('~<title[^>]*>(.*?)<\/title>~i', $page, $matches);
