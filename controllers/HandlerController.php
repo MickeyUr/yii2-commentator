@@ -174,10 +174,15 @@ class HandlerController extends Controller
      */
     public function actionLikes()
     {
-//        echo 1;
-//        exit();
-        $model = Comment::find()->where(['id'=>$_POST['id']])->one();
+
+//        $model = Comment::find()->where(['id'=>$_POST['id']])->one();
 //        dump($model->likes);
+
+        $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        $model = Comment::findOne(['id'=>$id]);
+        if (null === $model)
+          return false;
+
         $model->setLike($_POST['like']);
 
 
