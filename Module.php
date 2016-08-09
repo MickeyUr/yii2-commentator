@@ -188,7 +188,7 @@ class Module extends BaseModule
      */
     public function loadUser()
     {
-        if ( empty($this->userModelClass) )
+        if (empty($this->userModelClass) )
             return false;
 
         $userModel = new $this->userModelClass();

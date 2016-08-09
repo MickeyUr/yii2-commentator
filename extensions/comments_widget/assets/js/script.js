@@ -147,11 +147,13 @@ $(document).ready( function(){
             "dataType": "json",
             "data": form.serialize(),
             "success": function(data) {
-                // Сбрасываем форму
-                // form[0].reset();
-                $('#comment-content').val('');
-                $( "#comment-content" ).focus();
-                // $(this).trigger('reset');
+
+                if ('tree' in data){
+                    console.log('clear form');
+                    // Сбрасываем форму
+                    form[0].reset();
+                }
+
                 // Перерисовываем дерево
                 $('[data-role="tree"]').html(data.tree);
 
@@ -168,20 +170,10 @@ $(document).ready( function(){
                 animateComment(data.id, colorSuccess);
                 // Обновляем счётчик комментариев
                 $('[data-role="count"]').html(data.count);
-                // console.log(data);
-                $('#comment-form').yiiActiveForm('updateMessages', {
-                    'commentform-content': ['Really?'],
-                    'commentform-author': ['Это поле должно быть заполнено?'],
-                    // 'contactform-email': ['I don\'t like it!']
-                }, true);
-                $.each(data, function(key, value) {
 
-                    console.log(key);
-                    console.log(value);
-                    var div = "#"+key+"_em_";
-                    console.log(div);
-                    $(div).text(value);
-                    $(div).show();
+                $.each(data, function(key, val) {
+                    // $("#comment-"+key).after("<div class=\"help-block\">"+val+"</div>"); //отображение текста ошибки
+                    $("#comment-"+key).closest(".form-group").addClass("has-error");
                 });
             },
             "beforeSend": function() {

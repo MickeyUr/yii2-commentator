@@ -30,25 +30,22 @@ class HandlerController extends Controller
         $model = new Comment(['scenario' => 'guest']);
         if ( $user = \Yii::$app->getModule('comments')->loadUser() )
         {
-//            echo 0;
             $model->scenario='authorized';
             $model->user_id = $user->{$user->tableSchema->primaryKey[0]};
         }
-//echo 1;
+
         $this->performAjaxValidation($model);
 
-        if ( !isset($_POST['Comment']) )
+        if ( !isset($_POST['Comment']) || isset($_POST['ajax']))
         return false;
 
         $model->attributes = $_POST['Comment'];
         $model->ip = CHelper::getRealIP();
-//        dump($model->ip);
+
         $model->setStatus();
 
         if ( !$model->save() )
-//            return false;
             return($model->getErrors());
-//        echo 1;
 
         \Yii::$app->session->set("commentHash_{$model->id}",$model->getHash());
 
@@ -100,10 +97,11 @@ class HandlerController extends Controller
         $widget->models = Comment::find()->page($model->url)->approved()->all();
         $widget->init();
 
-        return json_encode(array(
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return [
             'id' => $model->id,
             'tree' => $widget->getTree(),
-        ));
+        ];
     }
 
     /**
@@ -125,14 +123,15 @@ class HandlerController extends Controller
             $widget->models = Comment::find()->page($url)->approved()->all();
             $widget->init();
 
-            return json_encode(array(
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
                 'tree' => $widget->getTree(),
                 'count' => count($widget->models),
                 'modal' => $this->getModal(array(
                         'title' => '<i class="fa fa-comments"></i> Комментарий успешно удалён!',
                         'content' => 'Вместо удалённого комментария вы можете написать новый.'
                     )),
-            ));
+            ];
         }
     }
 
@@ -192,10 +191,10 @@ class HandlerController extends Controller
         if ( $model->save() )
         {
 //            $model->setLikesToSession();
-
-            return json_encode(array(
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
                 'likes' => $model->getLikes()
-            ));
+            ];
         }
     }
 
@@ -228,6 +227,10 @@ class HandlerController extends Controller
     protected function performAjaxValidation($model)
     {
         if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+//
+//            if (isset($_POST['ajax']) /*&& $_POST['ajax'] === 'login-form'*/){
+//                dump($_POST['ajax']);
+//            }
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
 //            return json_encode(ActiveForm::validate($model));
