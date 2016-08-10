@@ -11,6 +11,9 @@ use yii\base\View;
 use yii\widgets\ActiveForm;
 use mickey\commentator\CommentatorAsset;
 use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use yii\filters\AccessRule;
+use yii\filters\AccessControl;
 
 class AdminController extends Controller
 {
@@ -28,6 +31,39 @@ class AdminController extends Controller
 		);
     }
 
+    /**
+     * Specifies the access control rules.
+     * This method is used by the 'accessControl' filter.
+     * @return array access control rules
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['post'],
+                    'AjaxUpdateStatus' => ['post'],
+                    'AjaxUpdateSetNew' => ['post'],
+                    'AjaxUpdateSetOld' => ['post'],
+                    'AjaxDelete' => ['post'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'ruleConfig' => [
+                    'class' => AccessRule::className(),
+                ],
+                'rules' => [
+                    [
+                        'allow' => \Yii::$app->getModule('comments')->isSuperuser()?true:false,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
 	/**
 	 * @return array action filters
 	 */
@@ -40,14 +76,10 @@ class AdminController extends Controller
 		);
 	}
 
-	/**
-	 * Specifies the access control rules.
-	 * This method is used by the 'accessControl' filter.
-	 * @return array access control rules
-	 */
+
 	public function accessRules()
 	{
-		if ( \Yii::$app->getModule('comments')->isSuperUser() )
+		if ( \Yii::$app->getModule('comments')->isSuperuser() )
 			return array(
 				array('allow')
 			);
