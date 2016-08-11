@@ -44,8 +44,10 @@ class HandlerController extends Controller
 
         $model->setStatus();
 
-        if ( !$model->save() )
+        if ( !$model->save() ) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
             return($model->getErrors());
+        }
 
         \Yii::$app->session->set("commentHash_{$model->id}",$model->getHash());
 
