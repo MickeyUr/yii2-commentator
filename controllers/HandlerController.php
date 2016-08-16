@@ -144,12 +144,12 @@ class HandlerController extends Controller
     public function actionReplyForm()
     {
         $model = new Comment(['scenario' => 'guest']);
-
+	$parent = Comment::find()->where(['id'=>$_POST['id']])->one();
         return $this->renderPartial('../../extensions/comments_widget/views/form', array(
             'model' => $model,
             'parent_id' => (int) $_POST['id'],
             'cancelButton' => true,
-            'url' => $_POST['url'],
+            'url' => $parent->url,
         ), false, true);
     }
 
