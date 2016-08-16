@@ -518,13 +518,16 @@ class Comment extends \yii\db\ActiveRecord
         return $this->user->{\Yii::$app->getModule('comments')->userEmailField};
     }
 
-    public function isNew()
+    public function isNew($id = false)
     {
+        if (false === $id) {
+          return false;
+        }
         $userID = \Yii::$app->getModule('comments')->getUserID();
-        if ( empty($userID) )
+        if ( !$userID )
             return false;
 
-        return NewComments::find()->user($userID)->where(['comment_id'=>$this->id]) ? true : false;
+        return NewComments::find()->user($userID)->where(['comment_id'=>$this->id])->one() ? true : false;
     }
 
     /**
