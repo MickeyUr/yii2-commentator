@@ -30,7 +30,7 @@ $this->registerJs($script, yii\web\View::POS_HEAD);
     <div data-role="tree"><?php echo $this->context->renderTree(); ?></div>
 
     <span class="title"><i class="fa fa-comment"></i> Добавить комментарий:</span>
-    <?php echo $this->render('form', array('model' => $model, 'url' => Yii::$app->getRequest()->getUrl())); ?>
+    <?php echo $this->render('form', array('model' => $model, 'url' => \Yii::$app->controller->route)); ?>
 
     <div data-role="modal-container"></div>
 </div>
