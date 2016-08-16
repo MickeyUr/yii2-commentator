@@ -454,9 +454,7 @@ class Comment extends \yii\db\ActiveRecord
      */
     public function getAbsolutePageUrl()
     {
-//        return \Yii::app()->getBaseUrl(true) . $this->url;
-//        return \Yii::$app->homeUrl . $this->url;
-        return $this->url;
+        return \Yii::$app->urlManager->createUrl($this->url);
     }
 
     /**
@@ -522,11 +520,14 @@ class Comment extends \yii\db\ActiveRecord
 
     public function isNew()
     {
+        if (false === $id) {
+          return false;
+        }
         $userID = \Yii::$app->getModule('comments')->getUserID();
-        if ( empty($userID) )
+        if ( !$userID )
             return false;
 
-        return NewComments::find()->user($userID)->where(['comment_id'=>$this->id]) ? true : false;
+        return NewComments::find()->user($userID)->where(['comment_id'=>$this->id])->one() ? true : false;
     }
 
     /**
@@ -537,13 +538,14 @@ class Comment extends \yii\db\ActiveRecord
      */
     public function loadPageTitle()
     {
-        $pageTitles = !empty(\Yii::$app->session->get("pageTitles")) ? \Yii::$app->session->get("pageTitles") : array();
+    	return $this->url;
+        /*$pageTitles = !empty(\Yii::$app->session->get("pageTitles")) ? \Yii::$app->session->get("pageTitles") : array();
 
         if ( !empty($pageTitles[$this->url]) )
             return $pageTitles[$this->url];
 
 //        $absoluteUrl = \Yii::$app->homeUrl . $this->url;
-        $absoluteUrl = $this->url;
+        $absoluteUrl = $this->getAbsolutePageUrl();
 //        $page = file_get_contents($absoluteUrl);
         $page='';
         preg_match('~<title[^>]*>(.*?)<\/title>~i', $page, $matches);
@@ -551,7 +553,7 @@ class Comment extends \yii\db\ActiveRecord
         $pageTitles[$this->url] = !empty($matches[1]) ? $matches[1] : $absoluteUrl;
         \Yii::$app->session->set("pageTitles",$pageTitles);
 
-        return $pageTitles[$this->url];
+        return $pageTitles[$this->url];*/
     }
 
     public static function find()
