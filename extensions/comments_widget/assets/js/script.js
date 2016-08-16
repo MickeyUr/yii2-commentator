@@ -140,14 +140,20 @@ $(document).ready( function(){
      */
     function ajaxCreate(form)
     {
+        console.log('1');
         $.ajax({
             "url": commentsCreateUrl,
             "type": "post",
             "dataType": "json",
             "data": form.serialize(),
             "success": function(data) {
-                // Сбрасываем форму
-                form[0].reset();
+
+                if ('tree' in data){
+                    console.log('clear form');
+                    // Сбрасываем форму
+                    form[0].reset();
+                }
+
                 // Перерисовываем дерево
                 $('[data-role="tree"]').html(data.tree);
 
@@ -164,6 +170,11 @@ $(document).ready( function(){
                 animateComment(data.id, colorSuccess);
                 // Обновляем счётчик комментариев
                 $('[data-role="count"]').html(data.count);
+
+                $.each(data, function(key, val) {
+                    // $("#comment-"+key).after("<div class=\"help-block\">"+val+"</div>"); //отображение текста ошибки
+                    $("#comment-"+key).closest(".form-group").addClass("has-error");
+                });
             },
             "beforeSend": function() {
                 $(".comments button").attr("disabled", true);
@@ -287,7 +298,7 @@ $(document).ready( function(){
      */
     function scrollToElem(elem, speed) {
         $("html, body").animate({
-            scrollTop: elem.offset().top
+            // scrollTop: elem.offset().top
         }, speed);
     }
 });

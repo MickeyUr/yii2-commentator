@@ -7,6 +7,7 @@ use yii\widgets\ActiveForm;
 use mickey\commentator\models\Comment as Comment;
 use mickey\commentator\helpers\CHelper as CHelper;
 use mickey\commentator\extensions\comments_widget\CommentsWidget as CommentsWidget;
+use yii\web\Response;
 
 class HandlerController extends Controller
 {
@@ -35,15 +36,18 @@ class HandlerController extends Controller
 
         $this->performAjaxValidation($model);
 
-        if ( !isset($_POST['Comment']) )
-            return false;
+        if ( !isset($_POST['Comment']) || isset($_POST['ajax']))
+        return false;
 
         $model->attributes = $_POST['Comment'];
         $model->ip = CHelper::getRealIP();
+
         $model->setStatus();
 
-        if ( !$model->save() )
-            return false;
+        if ( !$model->save() ) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return($model->getErrors());
+        }
 
         \Yii::$app->session->set("commentHash_{$model->id}",$model->getHash());
 
@@ -56,7 +60,8 @@ class HandlerController extends Controller
 
         $this->sendUserNotifies($model);
 
-        return json_encode(array(
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return (array(
             'id' => $model->id,
             'premoderate' => \Yii::$app->getModule('comments')->getPremoderateStatus(),
             'tree' => $widget->getTree(),
@@ -94,10 +99,11 @@ class HandlerController extends Controller
         $widget->models = Comment::find()->page($model->url)->approved()->all();
         $widget->init();
 
-        return json_encode(array(
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        return [
             'id' => $model->id,
             'tree' => $widget->getTree(),
-        ));
+        ];
     }
 
     /**
@@ -119,14 +125,15 @@ class HandlerController extends Controller
             $widget->models = Comment::find()->page($url)->approved()->all();
             $widget->init();
 
-            return json_encode(array(
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
                 'tree' => $widget->getTree(),
                 'count' => count($widget->models),
                 'modal' => $this->getModal(array(
                         'title' => '<i class="fa fa-comments"></i> Комментарий успешно удалён!',
                         'content' => 'Вместо удалённого комментария вы можете написать новый.'
                     )),
-            ));
+            ];
         }
     }
 
@@ -168,22 +175,28 @@ class HandlerController extends Controller
      */
     public function actionLikes()
     {
+
+//        $model = Comment::find()->where(['id'=>$_POST['id']])->one();
+//        dump($model->likes);
+
         $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
         $model = Comment::findOne(['id'=>$id]);
         if (null === $model)
           return false;
+
         $model->setLike($_POST['like']);
+
 
         if ( !$model->canLiked() )
             return;
-
+//        dump($model->likes);
         if ( $model->save() )
         {
-            $model->setLikesToSession();
-
-            return json_encode(array(
+//            $model->setLikesToSession();
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
                 'likes' => $model->getLikes()
-            ));
+            ];
         }
     }
 
@@ -215,9 +228,14 @@ class HandlerController extends Controller
      */
     protected function performAjaxValidation($model)
     {
-        if (isset($_POST['ajax']))
-        {
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+//
+//            if (isset($_POST['ajax']) /*&& $_POST['ajax'] === 'login-form'*/){
+//                dump($_POST['ajax']);
+//            }
+            Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
+//            return json_encode(ActiveForm::validate($model));
         }
     }
 

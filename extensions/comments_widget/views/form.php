@@ -1,19 +1,23 @@
 <?php
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
+use yii\helpers\Html;
+
 ?>
 
 <?php $form = ActiveForm::begin([
-    'action' => $model->isNewRecord ? Url::toRoute(['/comments/handler/create']) : Url::toRoute(['/comments/handler/update']),
-    'method' => 'post',
-    'id' => $model->isNewRecord ? 'comment-form' : 'comment-form-'. $model->id,
-//    'enableAjaxValidation' => true,    //TODO enableAjaxValidation отправляет 2 запроса
+    'action' => $model->isNewRecord ? ['/comments/handler/create'] : ['/comments/handler/update'],
+    'id'=>$model->isNewRecord ? 'comment-form' : 'comment-form-'. $model->id,
+    'enableAjaxValidation'=>true, //TODO enableAjaxValidation отправляет 2 запроса
+    'enableClientValidation'=>true
+//    'validateOnChange' => false,
 //    'clientOptions' => [ //TODO client options yii2 ?
 //        'validateOnSubmit' => true,
 //        'validateOnChange' => false,
 //        'errorCssClass' => 'has-error',
 //        'successCssClass' => 'has-success',
 //    ],
+//    'options' => ['method' => 'post'],
 ]); ?>
 
 <div class="row">
