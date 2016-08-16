@@ -3,15 +3,6 @@
 
 <a name="comment_<?php echo $comment->id; ?>"></a>
 
-<?php $newCssClass = ''; ?>
-<?php if ( $comment->isNew() ) : ?>
-    <?php $newCssClass = ' new'; ?>
-    <?php if ( $userID = \Yii::$app->getModule('comments')->getUserID() ) : ?>
-        <?php $newComment=NewComments::find()->where(['user_id'=>$userID,'comment_id'=>$comment->id])->one();
-        if ($newComment) $newComment->delete();?>
-    <?php endif; ?>
-<?php endif; ?>
-
 <div<?php echo $enableMicrodata ? ' itemprop="comment" itemscope itemtype="http://schema.org/Comment"' : '' ?> class="comment well well-sm<?php echo $newCssClass; ?>"<?php echo ($margin != 0) ? ' style="margin-left: ' . $margin . 'px"' : '' ?> data-id="<?php echo $comment->id; ?>">
     <span<?php echo $enableMicrodata ? ' itemprop="creator" itemscope itemtype="http://schema.org/Person"' : '' ?> class="author"><i class="fa fa-user"></i>
         <?php echo !empty($comment->user) ? '<i class="fa fa-star star"></i>' : ''; ?>
