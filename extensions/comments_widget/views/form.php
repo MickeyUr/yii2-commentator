@@ -6,18 +6,13 @@ use yii\helpers\Html;
 ?>
 
 <?php $form = ActiveForm::begin([
-    'action' => $model->isNewRecord ? ['/comments/handler/create'] : ['/comments/handler/update'],
-    'id'=>$model->isNewRecord ? 'comment-form' : 'comment-form-'. $model->id,
-    'enableAjaxValidation'=>true, //TODO enableAjaxValidation отправляет 2 запроса
-    'enableClientValidation'=>true
-//    'validateOnChange' => false,
-//    'clientOptions' => [ //TODO client options yii2 ?
-//        'validateOnSubmit' => true,
-//        'validateOnChange' => false,
-//        'errorCssClass' => 'has-error',
-//        'successCssClass' => 'has-success',
-//    ],
-//    'options' => ['method' => 'post'],
+    'action'                =>$model->isNewRecord ? ['/comments/handler/create'] : ['/comments/handler/update'],
+    'id'                    =>$model->isNewRecord ? 'comment-form' : 'comment-form-'. $model->id,
+    'enableAjaxValidation'  =>true, //TODO enableAjaxValidation отправляет 2 запроса
+    'enableClientValidation'=>true,
+    'validateOnChange'      =>false,
+    'validateOnBlur'        =>true,
+    'validateOnSubmit'      =>true
 ]); ?>
 
 <div class="row">
@@ -78,6 +73,6 @@ use yii\helpers\Html;
     <?= $form->field($model, 'parent_id')->hiddenInput(['value' => $parent_id])->label(false) ?>
 <?php endif; ?>
 
-<?= $form->field($model, 'url')->hiddenInput(['value' => $url])->label(false) ?>
+<?= $form->field($model, 'url')->hiddenInput(['value' => \Yii::$app->controller->route])->label(false) ?>
 
 <?php ActiveForm::end(); ?>
