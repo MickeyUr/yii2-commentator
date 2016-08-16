@@ -71,11 +71,18 @@ class CommentsWidget extends Widget
 
         foreach($this->commentsArray[$parent_id] as $comment)
         {
+            $newCssClass = '';
+            if ( $comment['model']->isNew() ) {
+              $newComment = NewComments::find()->user(\Yii::$app->getModule('comments')->getUserID())->where(['comment_id'=>$this->id])->one();
+              $newComment->delete();
+              $newCssClass = ' new';
+            }        	
             echo $this->render('comment', array(
                 'comment' => $comment['model'],
                 'level' => $level,
                 'margin' => self::calculateMargin($level),
                 'enableMicrodata'=>$this->enableMicrodata,
+                'newCssClass'     => $newCssClass
             ));
 
             $level++;
