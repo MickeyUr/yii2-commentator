@@ -25,7 +25,7 @@ class CommentQuery extends \yii\db\ActiveQuery
     public function notify()
     {
         $this->andWhere(['notify'=>Comment::NOTIFY]);
-        $this->groupBy(['email']);
+        $this->groupBy(['email','id']);
         return $this;
     }
 
