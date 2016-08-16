@@ -165,7 +165,7 @@ class HandlerController extends Controller
         return $this->renderPartial('../../extensions/comments_widget/views/form', array(
             'model' => $model,
             'cancelButton' => true,
-            'url' => $_POST['url'],
+            'url' => $model->url, //fix: don't change url
         ), false, true);
     }
 
@@ -175,10 +175,6 @@ class HandlerController extends Controller
      */
     public function actionLikes()
     {
-
-//        $model = Comment::find()->where(['id'=>$_POST['id']])->one();
-//        dump($model->likes);
-
         $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
         $model = Comment::findOne(['id'=>$id]);
         if (null === $model)
@@ -189,10 +185,9 @@ class HandlerController extends Controller
 
         if ( !$model->canLiked() )
             return;
-//        dump($model->likes);
+
         if ( $model->save() )
         {
-//            $model->setLikesToSession();
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
                 'likes' => $model->getLikes()
