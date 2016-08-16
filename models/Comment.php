@@ -520,11 +520,14 @@ class Comment extends \yii\db\ActiveRecord
 
     public function isNew()
     {
+        if (false === $id) {
+          return false;
+        }
         $userID = \Yii::$app->getModule('comments')->getUserID();
-        if ( empty($userID) )
+        if ( !$userID )
             return false;
 
-        return NewComments::find()->user($userID)->where(['comment_id'=>$this->id]) ? true : false;
+        return NewComments::find()->user($userID)->where(['comment_id'=>$this->id])->one() ? true : false;
     }
 
     /**
