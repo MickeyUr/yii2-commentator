@@ -73,6 +73,6 @@ use yii\helpers\Html;
     <?= $form->field($model, 'parent_id')->hiddenInput(['value' => $parent_id])->label(false) ?>
 <?php endif; ?>
 
-<?= $form->field($model, 'url')->hiddenInput(['value' => \Yii::$app->controller->route])->label(false) ?>
+<?= $form->field($model, 'url')->hiddenInput(['value' => $url])->label(false) ?>
 
 <?php ActiveForm::end(); ?>
